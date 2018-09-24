@@ -58,7 +58,10 @@ namespace DatingApp.API.Controllers
             return StatusCode(201);
         }
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody]UserForLoginDto userForLoginDto){
+        public async Task<IActionResult> Login([FromBody]UserForLoginDto userForLoginDto)
+        {
+
+            // throw new Exception("computer says NO!");
             var userFromRepo = await _repo.Login(userForLoginDto.username.ToLower(), userForLoginDto.password);
 
             //we don't want to give the user a hint if he exist or not!
@@ -67,28 +70,29 @@ namespace DatingApp.API.Controllers
 
             //Start Token building
             //-1 : create a claims so that the server doesn't go to the DB to check for credentials: Id & username      
-            var claims = new [] 
+            var claims = new[]
             {
                     new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
                     new Claim(ClaimTypes.Name, userFromRepo.Username)
-            }; 
+            };
 
 
-        /*
-            Token server signing!: to make sure that when the token is comming back is valid!
-        */            
+            /*
+                Token server signing!: to make sure that when the token is comming back is valid!
+            */
             //2-Key for the token which will be hashed!, encoded to a bytearray
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
 
             //3- signing the key AppSetting:Token with hashing algorithm
-            var creds = new SigningCredentials(key,SecurityAlgorithms.HmacSha512Signature);
-            
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
             //4-create a token descriptor, based on the claims, expiration day and hashed key
-            var tokenDescriptor = new SecurityTokenDescriptor(){
+            var tokenDescriptor = new SecurityTokenDescriptor()
+            {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddHours(1),
                 SigningCredentials = creds
-                }; 
+            };
 
             //5- JwtSecurityTokenHandler allows us to create a token based on the token passed above 
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -96,7 +100,8 @@ namespace DatingApp.API.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
             //return the token to the client who successfully logged in!
-            return Ok(new {
+            return Ok(new
+            {
                 token = tokenHandler.WriteToken(token)
             });
         }
