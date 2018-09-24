@@ -61,7 +61,7 @@ namespace DatingApp.API.Controllers
         public async Task<IActionResult> Login([FromBody]UserForLoginDto userForLoginDto)
         {
 
-            // throw new Exception("computer says NO!");
+            //throw new Exception("computer says NO!");
             var userFromRepo = await _repo.Login(userForLoginDto.username.ToLower(), userForLoginDto.password);
 
             //we don't want to give the user a hint if he exist or not!

@@ -74,8 +74,11 @@ namespace DatingApp.API
                         {
                             //adding an extension method that adds headers before sending the exception error:
                             //e.g: app error & allow cross origin so the real error could reach the angular client
-                            context.Response.AddApplicationError(error.Error.Message);
-                            await context.Response.WriteAsync(error.Error.Message);
+                            //context.Response.AddApplicationError(error.Error.Message);
+                            await context
+                            .Response
+                            .AddApplicationError(error.Error.Message)
+                            .WriteAsync(error.Error.Message);
                         } 
                     });
                 });
