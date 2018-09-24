@@ -15,6 +15,7 @@ namespace DatingApp.API.Data
         }
         //to tell entity framework about our entities we need to give properties
         public DbSet<Value> Values { get; set; }
+        public DbSet<User> Users { get; set; }
 
     }
 }
