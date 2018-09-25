@@ -1,4 +1,4 @@
-----------------------------------------------------------
+---------------------------------------------------------
 adding alertifyjs, angular JWT, NGX Bootstrap, Bootswatch
 ----------------------------------------------------------
 1- alertifyjs: allow us to display beautiful alert on screen, see more on https://alertifyjs.com/
@@ -23,3 +23,14 @@ adding alertifyjs, angular JWT, NGX Bootstrap, Bootswatch
     npm install bootswatch@4.1.1
     we use united themes by adding : @import "../node_modules/bootswatch/dist/united/bootstrap.min.css" 
     to the styles.css
+----------------------------------------------------------
+Routing :angular outbox solution
+----------------------------------------------------------
+    1- creating components: messages, members, lists
+    2- adding: routerLinkActive="active" & [routerLink]="['/messages']"
+    3- creating a routes in file routes.routing.ts
+    4- adding the routing to appModule
+    5- protecting the route - create an AuthGuard : ng g guard auth --spec=false, implement canActivate method
+    6- protecting multiple route at once: re-arrange childeren components that need authorisation access 
+    7- use wild card for default routing (use '' instead of 'home')
+    
