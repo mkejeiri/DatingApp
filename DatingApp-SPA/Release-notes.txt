@@ -24,7 +24,7 @@ adding alertifyjs, angular JWT, NGX Bootstrap, Bootswatch
     we use united themes by adding : @import "../node_modules/bootswatch/dist/united/bootstrap.min.css" 
     to the styles.css
 ----------------------------------------------------------
-Routing :angular outbox solution
+Routing :angular out of the box solution
 ----------------------------------------------------------
     1- creating components: messages, members, lists
     2- adding: routerLinkActive="active" & [routerLink]="['/messages']"

@@ -15,7 +15,7 @@ export class AuthGuard implements CanActivate {
     if (this.authService.loggedIn()) {
       return true;
     }
-    this.alertify.error('Unauthorized access, you need to log in!');
+    this.alertify.error('Unauthorized access, you need to log in');
     this.router.navigate(['/']);
     return false;
   }

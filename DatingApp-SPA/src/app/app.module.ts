@@ -9,7 +9,7 @@ import { appRoutes } from './routes.routing';
 import { AlertifyService } from './_service/alertify.service';
 import { AuthService } from './_service/auth.service';
 import { ErrorInterceptorProvider } from './_service/error.interceptor';
-
+import { AuthGuard } from './_guards/auth.guard';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
@@ -18,7 +18,7 @@ import { NavComponent } from './nav/nav.component';
 import { ListsComponent } from './lists/lists.component';
 import { MemberListComponent } from './member-list/member-list.component';
 import { MessagesComponent } from './messages/messages.component';
-import { AuthGuard } from './_guards/auth.guard';
+
 
 @NgModule({
    declarations: [
