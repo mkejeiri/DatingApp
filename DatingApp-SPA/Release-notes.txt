@@ -1,0 +1,25 @@
+----------------------------------------------------------
+adding alertifyjs, angular JWT, NGX Bootstrap, Bootswatch
+----------------------------------------------------------
+1- alertifyjs: allow us to display beautiful alert on screen, see more on https://alertifyjs.com/
+    npm install alertifyjs --save
+    a- we need to add "node_modules/alertifyjs/build/alertify.js" in script  angular.json
+    b- create a service wrapper around alertify:
+        1- declare 'alertify.js' in script angular.json
+        2- import "alertify.min.css" and 'themes/bootstrap.min.css' in style.css
+        3- create a service AlertifyService
+        4- declare 'declare let alertify: any;'
+        5- redefine methods confirm,success,error,warning,message
+        6- Inject the service into the app.module to make available accross app.
+
+2-  angular JWT allow us to check if the token is expired and doesn't change anything on security level
+    See more on https://github.com/auth0/angular2-jwt
+    npm install @auth0/angular-jwt@2.0.0
+
+3- Using NGX Bootstrap instead of jquery, because it promotes components usage, same idea as angular, we could also use jquery!  
+    npm install ngx-bootstrap@3.0.1 --save
+
+4- bootswatch allow us to get a nice themes and colors
+    npm install bootswatch@4.1.1
+    we use united themes by adding : @import "../node_modules/bootswatch/dist/united/bootstrap.min.css" 
+    to the styles.css
