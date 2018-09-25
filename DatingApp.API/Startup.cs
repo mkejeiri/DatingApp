@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -24,9 +25,9 @@ namespace DatingApp.API
 {
     public class Startup
     {
-       public Startup(IConfiguration configuration) 
-        {            
-            this.Configuration = configuration;            
+        public Startup(IConfiguration configuration)
+        {
+            this.Configuration = configuration;
         }
         public IConfiguration Configuration { get; }
 
@@ -34,29 +35,46 @@ namespace DatingApp.API
         public void ConfigureServices(IServiceCollection services)
         {
             //everything as a service get injected into the app
-            services.AddDbContext<DataContext>(x=>x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+            .AddJsonOptions(opt =>{
+                opt.SerializerSettings.ReferenceLoopHandling = 
+                Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
             services.AddCors();
+
+            /*
+                Seed injections 
+            */
+            services.AddTransient<Seed>();
+            services.AddAutoMapper();            
+
+
+
             //services.AddSingleton(IAuthRepository); //not good for concurrent request
             //services.AddTransient(IAuthRepository); //an object per request is created and lighw ight for services
             services.AddScoped<IAuthRepository, AuthResposity>();//created per request within the scope, a singleton within a scope itself
+            /*Adding Dating repo as a DI service*/
+            services.AddScoped<IDatingRepository, DatingRepository>();
 
             //add Authorization service
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options => {
-                options.TokenValidationParameters = new TokenValidationParameters {
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(
                         Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
-                        ValidateIssuer =false /*So far we use localhost*/,
-                        ValidateAudience = false /*So far we use localhost*/
+                    ValidateIssuer = false /*So far we use localhost*/,
+                    ValidateAudience = false /*So far we use localhost*/
                 };
             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         //Order matter here and not in ConfigureServices
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, Seed seeder)
         {
             if (env.IsDevelopment())
             {
@@ -66,11 +84,13 @@ namespace DatingApp.API
             {
                 //pipeline that handles exceptions globally: 
 
-                app.UseExceptionHandler(buidler => {
-                    buidler.Run(async context => {
+                app.UseExceptionHandler(buidler =>
+                {
+                    buidler.Run(async context =>
+                    {
                         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                        var error= context.Features.Get<IExceptionHandlerFeature>();
-                        if (error !=null)
+                        var error = context.Features.Get<IExceptionHandlerFeature>();
+                        if (error != null)
                         {
                             //adding an extension method that adds headers before sending the exception error:
                             //e.g: app error & allow cross origin so the real error could reach the angular client
@@ -79,7 +99,7 @@ namespace DatingApp.API
                             .Response
                             .AddApplicationError(error.Error.Message)
                             .WriteAsync(error.Error.Message);
-                        } 
+                        }
                     });
                 });
                 // app.UseHsts();
@@ -92,6 +112,7 @@ namespace DatingApp.API
             No 'Access-Control-Allow-Origin' header is present on the requested resource.
             Origin 'http://localhost:4200' is therefore not allowed access.
             */
+            //seeder.SeedUser();
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();
             app.UseMvc(); //Middleware: route the request the appropriate controller 

@@ -1,0 +1,33 @@
+-------------------------------------------
+Extended User Class and adding photo Class
+-------------------------------------------
+1- specifying a navigation property such as public ICollection<Photo> Photos { get; set; } won't allow delete on cascade
+   we will get a 'onDelete: ReferentialAction.Restrict', we won't change migration code because is auto-gen to correct this public  
+
+2- dotnet ef migrations remove : will remove the last migrations
+3- after we run : 'dotnet ef database update' we no longer be able to revert back to the previous stage
+e.g :  'dotnet ef database update AddUserEntity' will fail due to sqlite and not EF, see for more...
+https://docs.microsoft.com/en-us/ef/core/providers/sqlite/limitations
+
+4- we could drop the database and run migration until the point of 'AddUserEntity'
+and we need to seed the db based on json file
+    a- 'dotnet ef database drop', migrations will be stil available
+    b- 'dotnet ef database update AddUserEntity'
+    c- do the necessary changes to allow the delete on cascade : change the nav property accordingly
+        add to photo Class: 
+        public User User { get; set; }
+        public int UserId { get; set; }
+
+    d- remove the old migrations: 'dotnet ef migrations remove' & 
+        add the new one 'dotnet ef migrations add ExtendedUserClass' &
+        run 'dotnet ef database update' again.
+
+
+5- to generate a seed based on a json file visit : https://www.json-generator.com/
+6- inject the seed in startup : services.AddTransient<Seed>() and call for seeder.SeedUser();
+7- we need to create DTO for User and Photo so to hide and recalculate sensible fields (hashed pass and salt), 
+    - a : an automapper (nuget : AutoMapper.Extensions.Microsoft.DependencyInjection -Version 4.1.1)
+    is available to map the field between our entities and DTO's
+    - b: need to be injected and also the mapping is done through the class Helpers.AutoMapperProfile
+8- an UsersController need to be created and to be protected
+9- so far, all the tests are run through postman!!! 
