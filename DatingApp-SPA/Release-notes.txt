@@ -33,4 +33,45 @@ Routing :angular out of the box solution
     5- protecting the route - create an AuthGuard : ng g guard auth --spec=false, implement canActivate method
     6- protecting multiple route at once: re-arrange childeren components that need authorisation access 
     7- use wild card for default routing (use '' instead of 'home')
-    
+
+
+
+-----------------------------------------------------------------------------
+Adding : route resolver, using built-in interceptors jwt,ngx bootstrap, ngx-gallery 
+-----------------------------------------------------------------------------
+1- auth0/angular2-jwt interceptors authorization headers: https://github.com/auth0/angular2-jwt
+    after injecting the JwtHelperService into the appModule and some config such as :
+        export function tokenGetter() {
+        return localStorage.getItem('access_token');
+        }
+
+        JwtModule.forRoot({
+            config: {
+                tokenGetter: tokenGetter,
+                whitelistedDomains: ['localhost:5000'],
+                blacklistedRoutes: ['localhost:5000/api/auth']
+            }
+            })
+            
+    the framework use 'JwtModule' which will retrieve automatically the token, intercept all requests going to localhost:5000 and add the headerOptions into the request before sending them to the server, and also ignoring the blacklistedRoutes,
+    such as : 'localhost:5000/api/auth'
+
+2- ngx bootstrap tab : see https://valor-software.com/ngx-bootstrap/?gclid=Cj0KCQjw3KzdBRDWARIsAIJ8TMSsxAx35og1c2aaaXXVhqX7YzcK_sXw6IW2gkbPzY5p3ioDo_Ic1QsaAqyaEALw_wcB#/tabs
+2- route resolver allow us to reload the data before even the component get loaded the avoid access 
+    to properties when they are not yet available. As a temporary solution we could use ? to make them optional
+    e.g: user?.name, see https://angular.io/api/router/Resolve
+
+    a- we need to create the resolver manually (file) add it to the providers list of the appModule
+    b- use it in thr file routing by specifying the keyword resolver and the property (e.g. prop = 'user' or 'uses') that we will retrieve from activatedRoute.params['prop'].
+    eg: inside my component for users property
+                ngOnInit() {
+                this.route.data.subscribe(
+                    (data) => {
+                    this.users = data['users'];
+                    }
+                );
+                }
+3- use ngx gallery: https://www.npmjs.com/package/ngx-gallery
+    a- npm install ngx-gallery@5.3.2 --save and follow the intructi
+    b- 
+    c- 

@@ -5,13 +5,14 @@ import { AlertifyService } from './alertify.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { JwtModule } from '@auth0/angular-jwt';
 import { HttpClientModule } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = 'http://localhost:5000/api/auth/';
+  private baseUrl = environment.apiUrl + 'auth/';
   constructor(private http: HttpClient, private alertify: AlertifyService) { }
   jwtHelper = new JwtHelperService();
   decodedToken: any;
@@ -29,7 +30,6 @@ export class AuthService {
               // console.log(response);
               localStorage.setItem('token', user.token);
               this.decodedToken = this.jwtHelper.decodeToken(user.token);
-              console.log(this.decodedToken);
             }
           }));
   }
