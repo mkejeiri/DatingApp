@@ -31,3 +31,27 @@ and we need to seed the db based on json file
     - b: need to be injected and also the mapping is done through the class Helpers.AutoMapperProfile
 8- an UsersController need to be created and to be protected
 9- so far, all the tests are run through postman!!! 
+
+-------------------------------------------
+Update API to receive a put request and update a profile
+-------------------------------------------
+- update UsersController by adding
+[HttpPut("{id}")]
+            public async Task<IActionResult> UpdateUser(int id, UserForUpdateDto userForUpdateDto)
+            {   
+
+                /*
+                  we need to match the user attempting to update his profile matching the 
+                  id which part of the token in the server
+                */         
+                if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))   return Unauthorized();
+                
+                var userFroRepo = await _repo.GetUser(id);  
+                _mapper.Map(userForUpdateDto, userFroRepo); 
+
+                if (await _repo.SaveAll()) return NoContent();
+                
+                throw new Exception($"updating user with {id} failed");
+            }
+
+

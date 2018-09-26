@@ -72,6 +72,23 @@ Adding : route resolver, using built-in interceptors jwt,ngx bootstrap, ngx-gall
                 );
                 }
 3- use ngx gallery: https://www.npmjs.com/package/ngx-gallery
-    a- npm install ngx-gallery@5.3.2 --save and follow the intructi
-    b- 
-    c- 
+    a- npm install ngx-gallery@5.3.2 --save and follow the intruction on https://www.npmjs.com/package/ngx-gallery
+
+
+-----------------------------------------------------------------------------
+created user profile component and allow user to update his/her profile
+-----------------------------------------------------------------------------
+1- created a edit profile component
+2- canDesactivate route guard
+3- adding 'HostListener' to prevent user to close browser in case of changes
+    @HostListener('window:beforeunload', ['$event'])
+    unloadNotification($event: any) {
+        if (this.editForm.dirty) {
+        $event.returnValue = true;
+        }
+    }
+4- using @ViewChild to access to the form component template and reset it and test if it's dirty
+    @ViewChild('editForm') editForm: NgForm;
+
+5- persisted changes to the API
+

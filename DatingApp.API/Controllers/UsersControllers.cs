@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using DatingApp.API.Data;
@@ -43,6 +44,24 @@ namespace DatingApp.API.Controllers
             var userToReturn =_mapper.Map<UserForDetailedDto>(user);             
              return Ok(userToReturn);
         }
+
+        [HttpPut("{id}")]
+            public async Task<IActionResult> UpdateUser(int id, UserForUpdateDto userForUpdateDto)
+            {   
+
+                /*
+                  we need to match the user attempting to update his profile matching the id which part of the token in the server
+                */         
+                if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))   return Unauthorized();
+                
+                var userFroRepo = await _repo.GetUser(id);  
+                _mapper.Map(userForUpdateDto, userFroRepo); 
+
+                if (await _repo.SaveAll()) return NoContent();
+                
+                throw new Exception($"updating user with {id} failed");
+            }
+
         
     }
 }

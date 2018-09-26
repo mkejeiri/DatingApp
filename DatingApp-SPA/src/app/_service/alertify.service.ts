@@ -14,7 +14,6 @@ declare let alertify: any;
   providedIn: 'root'
 })
 export class AlertifyService {
-
   constructor() { }
   confirm(message: string, onCallback: () => any) {
     alertify.confirm(message, (e => {
@@ -23,6 +22,7 @@ export class AlertifyService {
       } else { }
     }));
   }
+
   success(message: string) {
     alertify.success(message);
   }
