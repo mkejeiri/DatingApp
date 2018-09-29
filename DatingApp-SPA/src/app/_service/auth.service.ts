@@ -3,9 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { AlertifyService } from './alertify.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { JwtModule } from '@auth0/angular-jwt';
-import { HttpClientModule } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { User } from '../_models/User';
+import { BehaviorSubject } from 'rxjs/';
+// import { JwtModule } from '@auth0/angular-jwt';
+// import { HttpClientModule } from '@angular/common/http';
+// import { TypeaheadOptions } from 'ngx-bootstrap';
 
 
 @Injectable({
@@ -15,7 +18,15 @@ export class AuthService {
   private baseUrl = environment.apiUrl + 'auth/';
   constructor(private http: HttpClient, private alertify: AlertifyService) { }
   jwtHelper = new JwtHelperService();
+  currentUser: User;
   decodedToken: any;
+  currentPhotoSubject = new BehaviorSubject<string>('../../assets/user.png');
+
+
+  // changeMemberPhoto(photoUrl: string) {
+  //   this.photoUrlSubject.next(photoUrl);
+  // }
+
   // const expirationDate = jwtHelper.getTokenExpirationDate(myRawToken);
   // const isExpired = jwtHelper.isTokenExpired(myRawToken);
 
@@ -30,6 +41,9 @@ export class AuthService {
               // console.log(response);
               localStorage.setItem('token', user.token);
               this.decodedToken = this.jwtHelper.decodeToken(user.token);
+              localStorage.setItem('user', JSON.stringify(user.user));
+              this.currentUser = user.user;
+              this.currentPhotoSubject.next(this.currentUser.photoUrl);
             }
           }));
   }
@@ -40,12 +54,14 @@ export class AuthService {
 
   loggedIn() {
     const token = localStorage.getItem('token');
-    // shorthand for : if empty ->false else true
-    // return !!token;
+    this.currentUser = JSON.parse(localStorage.getItem('user'));
     return !this.jwtHelper.isTokenExpired(token);
   }
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    this.decodedToken = null;
+    this.currentUser = null;
     // console.log('logged out');
     this.alertify.message('logged out');
   }

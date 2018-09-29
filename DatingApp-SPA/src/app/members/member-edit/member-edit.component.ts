@@ -19,6 +19,7 @@ export class MemberEditComponent implements OnInit {
     private router: Router) { }
   @ViewChild('editForm') editForm: NgForm;
   user: User;
+  photoUrl: string;
   /*
     to prevent user from closing the browser if changes aren't saved!
     Angular has no authority over the window, it can only plays with the DOM!!!
@@ -36,6 +37,11 @@ export class MemberEditComponent implements OnInit {
         this.user = data['user'];
       }
     );
+
+    this.authService.currentPhotoSubject
+    .subscribe(picUrl => {
+      this.photoUrl = picUrl;
+    });
   }
 
   udpateUser() {
@@ -56,5 +62,9 @@ export class MemberEditComponent implements OnInit {
       }
     );
   }
+  // updateMainPhoto(photoUrl) {
+
+  //   this.user.photoUrl = photoUrl;
+  // }
 
 }

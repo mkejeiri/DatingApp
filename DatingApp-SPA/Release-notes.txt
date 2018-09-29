@@ -91,4 +91,30 @@ created user profile component and allow user to update his/her profile
     @ViewChild('editForm') editForm: NgForm;
 
 5- persisted changes to the API
+6- use of Output with event emitter and replacement with BehaviorSubject
+differences summarized.
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃         Observable                  ┃     BehaviorSubject/Subject         ┃      
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫ 
+│ Is just a function, no state        │ Has state. Stores data in memory    │
+├─────────────────────────────────────┼─────────────────────────────────────┤
+│ Code run for each observer          │ Same code run                       │
+│                                     │ only once for all observers         │
+├─────────────────────────────────────┼─────────────────────────────────────┤
+│ Creates only Observable             │Can create and also listen Observable│
+│ ( data producer alone )             │ ( data producer and consumer )      │
+├─────────────────────────────────────┼─────────────────────────────────────┤
+│ Usage: Simple Observable with only  │ Usage:                              │
+│ one Obeserver.                      │ * Store data and modify frequently  │
+│                                     │ * Multiple observers listen to data │
+│                                     │ * Proxy between Observable  and     │
+│                                     │   Observer                          │
+└─────────────────────────────────────┴─────────────────────────────────────┘
+
+7- implement of deletion and main photo settings and the usage of localhost to store user along with its token
+8- showing also the thumbnail picture as an icone along with the name of logged in user and sync of all photos 
+    when they change to main photo.
+
+
 

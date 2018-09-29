@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../_service/auth.service';
 import { AlertifyService } from '../_service/alertify.service';
 import { Router } from '@angular/router';
+import { User } from '../_models/User';
 
 /*  I N F O : Why Auth0 JWT
   using localStorage to store the token is a BAD idea, get store in client ùachine and
@@ -16,21 +17,25 @@ import { Router } from '@angular/router';
 })
 export class NavComponent implements OnInit {
   model: any = {};
+  photoUrl: string;
   constructor(
     public authService: AuthService,
     private alertify: AlertifyService,
     private router: Router
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.authService.currentPhotoSubject
+      .subscribe(picUrl => {
+        this.photoUrl = picUrl;
+      });
+  }
   login() {
     this.authService.login(this.model).subscribe(
       next => {
-        // console.log('Logged in successfully!');
         this.alertify.success('Logged in successfully!');
       },
       err => {
-        // console.log(err);
         this.alertify.error(err);
       },
       () => {

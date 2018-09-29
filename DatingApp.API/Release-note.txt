@@ -54,4 +54,24 @@ Update API to receive a put request and update a profile
                 throw new Exception($"updating user with {id} failed");
             }
 
+    ---------------------------------------------------------
+    photos(upload, removal, profile update,...), adding PhotosController, Couldinary Cloud
+    --------------------------------------------------------
+        1- Create a Couldinary account:
+            Cloud name : dzaqp6jnu
+            API key:813335792476897
+            API secret: QFuIZGlEEqT9CT1_V9cL6A1D5ns
+            Environment variable:cloudinary://813335792476897:QFuIZGlEEqT9CT1_V9cL6A1D5ns@dzaqp6jnu/
+            Cloudinary::Uploader.upload("sample.jpg", :crop => "limit", :tags => "samples", :width => 3000, :height => 2000)
+            See doc for .Net : https://cloudinary.com/documentation/dotnet_integration#_net_getting_started_guide
+
+        2- Create a photosController which take a photo and upload it to Cloudinary.
+        3- delete photo from database and cloudinary
+        4- control if the user has the right access before changing anything in his profile!
+        5- rendering of customs entities (DTO's) instead of real entities to keep sensible data from leaking out
+        6- AutoMapper usage between  customs entities (DTO's) and persisted entities.
+        7- adding PhotosController for photos management
+
+
+
 

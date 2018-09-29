@@ -30,4 +30,14 @@ export class UserService {
   updateUser(id: number, user: User) {
     return this.http.put(this.baseUrl + 'users/' + id, user);
   }
+
+  // This a post request so we need to send something we will send an empty object {}
+  setMainPhoto(userId: number, id: number) {
+    return this.http.post(this.baseUrl + 'users/' + userId + '/photos/' + id + '/setMain', {});
+  }
+
+  deletePhoto(userId: number, id: number) {
+    return this.http.delete(this.baseUrl + 'users/' + userId + '/photos/' + id );
+  }
+
 }

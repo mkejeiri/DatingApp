@@ -10,6 +10,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
 // using System.Collections.Generic;
 // using System.Linq;
 
@@ -32,10 +33,13 @@ namespace DatingApp.API.Controllers
     {
         private readonly IAuthRepository _repo;
         private readonly IConfiguration _config;
-        public AuthController(IAuthRepository authRepository, IConfiguration config)
+        private readonly IMapper _mapper;
+
+        public AuthController(IAuthRepository authRepository, IConfiguration config, IMapper mapper)
         {
             _repo = authRepository;
             _config = config;
+            _mapper = mapper;
         }
 
         //we don't need to use [FromBody], because dotnet inferer auto from the post request body 
@@ -99,10 +103,13 @@ namespace DatingApp.API.Controllers
             //6- store the token in var token
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
+            var user = _mapper.Map<UserForListDto>(userFromRepo);
+
             //return the token to the client who successfully logged in!
             return Ok(new
             {
-                token = tokenHandler.WriteToken(token)
+                token = tokenHandler.WriteToken(token),
+                user
             });
         }
     }

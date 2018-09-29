@@ -17,7 +17,10 @@
     </ul>
     <!-- <div *ngIf="logg edIn()" class="dropdown" dropdown (onShown)="onShown($event)" (onHidden)="onHidden($event)" (isOpenChange)="isOpenChange($event)"> -->
     <div *ngIf="loggedIn()" class="dropdown" dropdown>
-      <a class="dropdown-toggle text-light" dropdownToggle (click)="false">
+        <span class="mr-1" >
+            <img [src]="photoUrl" class="" alt="">
+          </span> 
+      <a class="dropdown-toggle text-light" dropdownToggle (click)="false">               
         Welcome {{this.authService.decodedToken?.unique_name | titlecase}}
       </a>
       <div class="dropdown-menu mt-3"  *dropdownMenu>
