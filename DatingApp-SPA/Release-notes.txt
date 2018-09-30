@@ -126,3 +126,9 @@ Expanding register form
 3 - date PB: date type  (datepicker) is not implemented and it's up the browser to implement this, some browser
     doesn't implement this and we need to keep a uniform UI browser wide!, see more : https://caniuse.com/
 4- adding a default user photo from asset in case there isn't any.
+
+-----------------------------------------------------------------------------
+Date formating : Memeber since & Last Active
+-----------------------------------------------------------------------------
+1 - use of {{user.created|date:'mediumDate'}}
+2 - use of {{user.lastActive|timeAgo}} more see: https://www.npmjs.com/package/time-ago-pipe  

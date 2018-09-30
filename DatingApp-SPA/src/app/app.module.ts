@@ -9,6 +9,7 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { NgxGalleryModule } from 'ngx-gallery';
 import { FileUploadModule } from 'ng2-file-upload';
 import { BsDatepickerModule } from 'ngx-bootstrap';
+import {TimeAgoPipe} from 'time-ago-pipe';
 
 
 
@@ -51,6 +52,7 @@ export function tokenGetter() {
         MemberDetailComponent,
         MemberEditComponent,
         PhotoEditorComponent,
+        TimeAgoPipe
     ],
     imports: [
         BrowserModule,

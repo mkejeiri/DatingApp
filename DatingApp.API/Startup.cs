@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -56,7 +57,7 @@ namespace DatingApp.API
             //services.AddTransient(IAuthRepository); //an object per request is created and lighw ight for services
             services.AddScoped<IAuthRepository, AuthResposity>();//created per request within the scope, a singleton within a scope itself
             /*Adding Dating repo as a DI service*/
-            services.AddScoped<IDatingRepository, DatingRepository>();
+            services.AddScoped<IDatingRepository, DatingRepository>();           
 
             //add Authorization service
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -71,6 +72,9 @@ namespace DatingApp.API
                     ValidateAudience = false /*So far we use localhost*/
                 };
             });
+
+            //Add ActionFilter/ServiceFilter service to change the last active date : create an instance per request
+             services.AddScoped<LogUserActivity>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

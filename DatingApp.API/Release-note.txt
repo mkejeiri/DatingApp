@@ -83,5 +83,11 @@ Expanding register functionality
         b- 'GetUser' method is in UsersController (another controller) we need to provide that value 
             return CreatedAtRoute("GetUser", new { Controller="Users", id = userToCreate.Id }, userToReturn);
 
-3- 
 
+-----------------------------------------------------------------------------
+Action filter : attribute that could apply to anything : class, method, etc
+-----------------------------------------------------------------------------
+1- create a LogUserActivity Helper class that implement IAsyncActionFiller
+2- add LogUserActivity as a service (ServiceFilter) to the startup class : services.AddScoped<LogUserActivity>()
+3- Decorate the UserController with [ServiceFilter(typeof(LogUserActivity))] ,
+   so the service will run after each actionResult method is completed in the UserController
