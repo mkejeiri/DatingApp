@@ -30,25 +30,25 @@ export class AuthService {
   // const expirationDate = jwtHelper.getTokenExpirationDate(myRawToken);
   // const isExpired = jwtHelper.isTokenExpired(myRawToken);
 
-  login(model: any) {
+  login(user: User) {
     // in angular 6 to use rxjs we need to go through a pipe!
-    return this.http.post(this.baseUrl + 'login', model)
+    return this.http.post(this.baseUrl + 'login', user)
       .pipe(
         map(
           (response: any) => {
-            const user = response;
-            if (user) {
+            const constUser = response;
+            if (constUser) {
               // console.log(response);
-              localStorage.setItem('token', user.token);
-              this.decodedToken = this.jwtHelper.decodeToken(user.token);
-              localStorage.setItem('user', JSON.stringify(user.user));
-              this.currentUser = user.user;
+              localStorage.setItem('token', constUser.token);
+              this.decodedToken = this.jwtHelper.decodeToken(constUser.token);
+              localStorage.setItem('user', JSON.stringify(constUser.user));
+              this.currentUser = constUser.user;
               this.currentPhotoSubject.next(this.currentUser.photoUrl);
             }
           }));
   }
-  register(model: any) {
-    return this.http.post(this.baseUrl + 'register', model);
+  register(user: User) {
+    return this.http.post(this.baseUrl + 'register', user);
   }
 
 

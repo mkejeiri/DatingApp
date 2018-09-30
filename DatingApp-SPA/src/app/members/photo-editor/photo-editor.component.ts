@@ -57,6 +57,7 @@ export class PhotoEditorComponent implements OnInit {
     this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
 
     // onSuccessItem(item: FileItem, response: string, status: number, headers: ParsedResponseHeaders): any;
+    // after finishing the upload
     this.uploader.onSuccessItem = (item, response, status, headers) => {
       if (response) {
         const res: Photo = JSON.parse(response);
@@ -67,6 +68,11 @@ export class PhotoEditorComponent implements OnInit {
           dateAdded: res.dateAdded,
           isMain: res.isMain
         };
+        if (photo.isMain) {
+          this.authService.currentPhotoSubject.next(photo.url);
+          this.authService.currentUser.photoUrl = photo.url;
+          localStorage.setItem('user', JSON.stringify(this.authService.currentUser));
+        }
         this.photos.push(photo);
       }
     };

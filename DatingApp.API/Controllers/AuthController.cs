@@ -48,18 +48,25 @@ namespace DatingApp.API.Controllers
         [HttpPost("register")]        
         public async Task<IActionResult> Register ([FromBody]UserForRegisterDto userForRegisterDto){
             
-            //validate request
-
+            //validate request if [ApiController] not specified 
             if(!ModelState.IsValid) return BadRequest(ModelState);
+
             userForRegisterDto.username = userForRegisterDto.username.ToLower();
 
             if (await _repo.UserExists(userForRegisterDto.username)) return BadRequest("Username already exists");
             
             var userToCreate = new User {Username = userForRegisterDto.username};
-            
+
+            userToCreate=_mapper.Map<User>(userForRegisterDto);
             var createdUser = await _repo.Register(userToCreate, userForRegisterDto.password);
-            // return CreatedAtRoute();
-            return StatusCode(201);
+            
+            var userToReturn = _mapper.Map<UserForDetailedDto >(createdUser);
+            
+            //we need to a send location header (url to the newly created user) as well
+            // as the resource we created (newly created user)
+
+            //since the 'GetUser' method is in UsersController (another controller) we need to provide that value 
+            return CreatedAtRoute("GetUser", new { Controller="Users", id = userToCreate.Id }, userToReturn);
         }
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody]UserForLoginDto userForLoginDto)

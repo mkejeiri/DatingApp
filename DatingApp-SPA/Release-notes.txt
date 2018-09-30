@@ -118,3 +118,11 @@ differences summarized.
 
 
 
+-----------------------------------------------------------------------------
+Expanding register form
+-----------------------------------------------------------------------------
+1 - use of reactive form and validation, better that template form approach, it keeps html clean
+2 - adding customs validation such as confirm password
+3 - date PB: date type  (datepicker) is not implemented and it's up the browser to implement this, some browser
+    doesn't implement this and we need to keep a uniform UI browser wide!, see more : https://caniuse.com/
+4- adding a default user photo from asset in case there isn't any.

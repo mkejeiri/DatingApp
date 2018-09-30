@@ -72,6 +72,16 @@ Update API to receive a put request and update a profile
         6- AutoMapper usage between  customs entities (DTO's) and persisted entities.
         7- adding PhotosController for photos management
 
+-----------------------------------------------------------------------------
+Expanding register functionality
+-----------------------------------------------------------------------------
+1- receiving data from the form and expanding the register functionality:
+    expanding UserForRegisterDto and implement the approriate mapping with user business entity.
+2- after registration send CreatedAtRoute with UserForRegisterDto data.
+        a- send location header (url to the newly created user) as well as the resource we created 
+            (newly created user = userToReturn).
+        b- 'GetUser' method is in UsersController (another controller) we need to provide that value 
+            return CreatedAtRoute("GetUser", new { Controller="Users", id = userToCreate.Id }, userToReturn);
 
-
+3- 
 
