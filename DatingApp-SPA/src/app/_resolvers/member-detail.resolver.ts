@@ -3,7 +3,7 @@ import { User } from '../_models/User';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { UserService } from '../_service/user.service';
-import { catchError, map } from 'rxjs/operators';
+import { catchError} from 'rxjs/operators';
 import { AlertifyService } from '../_service/alertify.service';
 
 

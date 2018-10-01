@@ -91,3 +91,26 @@ Action filter : attribute that could apply to anything : class, method, etc
 2- add LogUserActivity as a service (ServiceFilter) to the startup class : services.AddScoped<LogUserActivity>()
 3- Decorate the UserController with [ServiceFilter(typeof(LogUserActivity))] ,
    so the service will run after each actionResult method is completed in the UserController
+
+-----------------------------------------------------------------------------
+Pagination: http://localhost:5000/api/users?pageSize=2&PageNumber=6
+-----------------------------------------------------------------------------
+1 - we create a generic PagedList<T>: List<T> Helper class : all magic of differed quering 
+    is done here and run on DB side (not controller side) that to IQueryable interface.
+
+2 - we create a PaginationHeader to send a header info for our request
+
+3 - create AddPagination Extensions method for HttpResponse and add the PaginationHeader 
+    as Serializable Json stream into the request. we need also expose the header
+4- angular deal with camelcase format otherwise we get in the header:
+    Pagination →{"CurrentPage":1,"ItemsPerPage":3,"TotalItems":3,"TotalPages":4}
+    we will get : Pagination →{"currentPage":1,"itemsPerPage":3,"totalItems":3,"totalPages":4
+            var camelCaseFormatter = new JsonSerializerSettings();
+            camelCaseFormatter.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            response.Headers.Add("Pagination", JsonConvert.SerializeObject(paginationHeader,camelCaseFormatter));
+
+-----------------------------------------------------------------------------
+Fitlering & pagination  & sorting
+-----------------------------------------------------------------------------
+- We pass all our userParams in the header (gender, minAge, maxAge, orderBy)
+- API receives an userParams object and pass it to the repository to get the relevant data

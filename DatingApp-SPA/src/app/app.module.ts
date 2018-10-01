@@ -10,6 +10,7 @@ import { NgxGalleryModule } from 'ngx-gallery';
 import { FileUploadModule } from 'ng2-file-upload';
 import { BsDatepickerModule } from 'ngx-bootstrap';
 import {TimeAgoPipe} from 'time-ago-pipe';
+import { ButtonsModule } from 'ngx-bootstrap';
 
 
 
@@ -34,6 +35,7 @@ import { MemberEditResolver } from './_resolvers/member-edit.resolver';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { PreventUnsavedChangesGuard } from './_guards/prevent-unsaved-changes.guard';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
+import { PaginationModule } from 'ngx-bootstrap';
 
 export function tokenGetter() {
     return localStorage.getItem('token');
@@ -70,8 +72,10 @@ export function tokenGetter() {
                 blacklistedRoutes: ['localhost:5000/api/auth/']
             }
         }),
+        ButtonsModule.forRoot(),
         TabsModule.forRoot(),
-        FileUploadModule
+        FileUploadModule,
+        PaginationModule.forRoot()
     ],
     providers: [
         AuthService,

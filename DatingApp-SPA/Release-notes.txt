@@ -132,3 +132,8 @@ Date formating : Memeber since & Last Active
 -----------------------------------------------------------------------------
 1 - use of {{user.created|date:'mediumDate'}}
 2 - use of {{user.lastActive|timeAgo}} more see: https://www.npmjs.com/package/time-ago-pipe  
+
+-----------------------------------------------------------------------------
+Fitlering & pagination  & sorting
+-----------------------------------------------------------------------------
+- use ngx bootstrap to add pagination and buttons
