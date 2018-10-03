@@ -51,7 +51,6 @@ export class AuthService {
     return this.http.post(this.baseUrl + 'register', user);
   }
 
-
   loggedIn() {
     const token = localStorage.getItem('token');
     this.currentUser = JSON.parse(localStorage.getItem('user'));

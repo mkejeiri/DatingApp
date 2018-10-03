@@ -17,5 +17,29 @@ namespace DatingApp.API.Data
         public DbSet<Value> Values { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Photo> Photos { get; set; }
+
+        public DbSet<Like> Likes { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder){
+
+            //form the PK: LikerId + LikeeId
+            modelBuilder.Entity<Like>()
+            .HasKey(k => new {k.LikerId, k.LikeeId});
+
+            //Liker could have many likees : 
+            //e.g : a user (likee) could like many users and could be liked by many other users (likers)
+            modelBuilder.Entity<Like>()
+            .HasOne(u => u.Liker)
+            .WithMany(u => u.Likees)
+            .HasForeignKey( f => f.LikerId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            //Likee could have many likers
+            //e.g : a user (likee) could like many users and could be liked by many other users (likers)
+            modelBuilder.Entity<Like>()
+            .HasOne(u => u.Likee)
+            .WithMany(u => u.Likers)
+            .HasForeignKey(f => f.LikeeId)
+            .OnDelete(DeleteBehavior.Restrict);
+        }
     }
 }

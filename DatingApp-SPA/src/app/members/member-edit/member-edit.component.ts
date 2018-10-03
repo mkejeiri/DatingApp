@@ -45,7 +45,7 @@ export class MemberEditComponent implements OnInit {
   }
 
   udpateUser() {
-    console.log(this.user);
+    // console.log(this.user);
     /*
       we should send token nameid (userId) to check whether is the
       same user trying to update his profile

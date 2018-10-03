@@ -11,13 +11,14 @@ import { MembersListResolver } from './_resolvers/members-list.resolver';
 import { MemberEditResolver } from './_resolvers/member-edit.resolver';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { PreventUnsavedChangesGuard } from './_guards/prevent-unsaved-changes.guard';
+import { LikeParamsResolver } from './_resolvers/like-params.resolver';
 
 export const appRoutes: Routes = [
   { path: '', component: HomeComponent },
   {
     path: '', runGuardsAndResolvers: 'always', canActivate: [AuthGuard]
     , children: [
-      { path: 'lists', component: ListsComponent },
+      { path: 'lists', component: ListsComponent, resolve: {users: LikeParamsResolver} },
       { path: 'members', component: MemberListComponent, resolve: { users: MembersListResolver } },
       { path: 'members/:id', component: MemberDetailComponent, resolve: { user: MemberDetailResolver } },
       {

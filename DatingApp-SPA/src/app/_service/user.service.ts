@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { User } from '../_models/User';
 import { PaginationResult } from '../_models/PaginationResult';
 import { map } from 'rxjs/operators';
+import { ExecOptionsWithStringEncoding } from 'child_process';
 
 // const httpOptions = {
 //   headers: new HttpHeaders({
@@ -19,7 +20,7 @@ export class UserService {
   private baseUrl = environment.apiUrl;
   constructor(private http: HttpClient) { }
 
-  getUsers(page?, itemsPerPage?, userParams?): Observable<PaginationResult<User[]>> {
+  getUsers(page?, itemsPerPage?, userParams?, likeParams?: string): Observable<PaginationResult<User[]>> {
     // return this.http.get<User[]>(this.baseUrl + 'users', httpOptions);
     const paginatedResult: PaginationResult<User[]> = new PaginationResult<User[]>();
     // tslint:disable-next-line:prefer-const
@@ -36,6 +37,17 @@ export class UserService {
       params = params.append('orderBy', userParams.orderBy);
 
     }
+
+    if (likeParams != null) {
+      if (likeParams.toLowerCase() === 'likers') {
+        params = params.append('likers', 'true');
+      }
+
+      if (likeParams.toLowerCase() === 'likees') {
+        params = params.append('likees', 'true');
+      }
+    }
+
     return this.http.get<User[]>(this.baseUrl + 'users', { observe: 'response', params })
       .pipe(
         map((response) => {
@@ -64,6 +76,10 @@ export class UserService {
 
   deletePhoto(userId: number, id: number) {
     return this.http.delete(this.baseUrl + 'users/' + userId + '/photos/' + id );
+  }
+
+  sendLike(userId: number, recipientId: number) {
+    return this.http.post(this.baseUrl + 'users/' + userId + '/like/' + recipientId, {});
   }
 
 }

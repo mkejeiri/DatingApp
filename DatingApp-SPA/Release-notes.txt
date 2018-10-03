@@ -137,3 +137,11 @@ Date formating : Memeber since & Last Active
 Fitlering & pagination  & sorting
 -----------------------------------------------------------------------------
 - use ngx bootstrap to add pagination and buttons
+
+
+-----------------------------------------------------------------------------
+Adding likes and see likees
+-----------------------------------------------------------------------------
+1 - add like functionality
+2 - Using ngx bootstrap buttons and paginations
+3 - Using the new LikeParamsResolver which gets of likeParams value before even the ListsComponent loaded

@@ -114,3 +114,50 @@ Fitlering & pagination  & sorting
 -----------------------------------------------------------------------------
 - We pass all our userParams in the header (gender, minAge, maxAge, orderBy)
 - API receives an userParams object and pass it to the repository to get the relevant data
+
+
+-----------------------------------------------------------------------------
+like functionality : adding liker and likee entities
+-----------------------------------------------------------------------------
+1- EF fluent API (self referenced table): create a many to many relationship from users to users based on like entiry (likerId, LikeeId)
+2- create the entity (self referenced) : 
+     public class Like
+    {
+        public int LikerId { get; set; }
+        public int LikeeId { get; set; }
+        // e.g : a user (likee) could like many users 
+        // and could be liked by many other users (likers)
+        public User Likes { get; set; }
+        public User Liker { get; set; }        
+    }
+
+3- add navigation property to user entity : 
+        public ICollection<Like> Likers { get; set; }
+        public ICollection<Like> Likees { get; set; }
+
+4- Use EF fluent API OnModelCreating:
+        public DbSet<Like> Likes { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder){
+                    //form the PK: LikerId + LikeeId
+                    modelBuilder.Entity<Like>()
+                    .HasKey(k => new {k.LikerId, k.LikeeId});
+
+                    //Liker could have many likees : 
+                    //e.g : a user (likee) could like many users and could be liked by many other users (likers)
+                    modelBuilder.Entity<Like>()
+                    .HasOne(u => u.Liker)
+                    .WithMany(u => u.Likees)
+                    .HasForeignKey( f => f.LikerId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                    //Likee could have many likers
+                    //e.g : a user (likee) could like many users and could be liked by many other users (likers)
+                    modelBuilder.Entity<Like>()
+                    .HasOne(u => u.Likee)
+                    .WithMany(u => u.Likers)
+                    .HasForeignKey(f => f.LikeeId)
+                    .OnDelete(DeleteBehavior.Restrict);
+                }
+
+5- add a post request IActionResult handler LikeUser
+

@@ -117,7 +117,7 @@ namespace DatingApp.API
             No 'Access-Control-Allow-Origin' header is present on the requested resource.
             Origin 'http://localhost:4200' is therefore not allowed access.
             */
-            //seeder.SeedUser();
+           //seeder.SeedUser();
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();
             app.UseMvc(); //Middleware: route the request the appropriate controller 
