@@ -1,6 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-
+//Data transfer object (DTO)
 namespace DatingApp.API.Dtos
 {
     public class UserForRegisterDto

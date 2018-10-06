@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DatingApp.API.Models;
-
+//Data transfer object (DTO)
 namespace DatingApp.API.Dtos
 {
     public class UserForDetailedDto

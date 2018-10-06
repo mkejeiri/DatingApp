@@ -1,6 +1,6 @@
 using System;
 using Microsoft.AspNetCore.Http;
-
+//Data transfer object (DTO)
 namespace DatingApp.API.Dtos
 {
     public class PhotoForCreationDto

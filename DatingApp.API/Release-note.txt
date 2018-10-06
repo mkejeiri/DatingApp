@@ -161,3 +161,12 @@ like functionality : adding liker and likee entities
 
 5- add a post request IActionResult handler LikeUser
 
+-----------------------------------------------------------------------------
+Messages functionality
+-----------------------------------------------------------------------------
+1 - Create the proper entity Messages, do the EF (context & fluent API for relationship with the user)
+2 - Create MessageController with all IActionResult
+3 - Return paginated result 
+4 - Add new Messages
+5 - manage read/unread, inbox/outbox and thread(conversation) messages
+6-  chat functionality, mark as read messages

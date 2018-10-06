@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { User } from '../_models/User';
 import { PaginationResult } from '../_models/PaginationResult';
 import { map } from 'rxjs/operators';
-import { ExecOptionsWithStringEncoding } from 'child_process';
+import { Message } from '../_models/Message';
 
 // const httpOptions = {
 //   headers: new HttpHeaders({
@@ -82,4 +82,51 @@ export class UserService {
     return this.http.post(this.baseUrl + 'users/' + userId + '/like/' + recipientId, {});
   }
 
+  getMessages(userId: number, page?, itemsPerPage?, messageContainer?) {
+    const paginatedResult: PaginationResult<Message[]> = new PaginationResult<Message[]>();
+    let params = new HttpParams();
+    if (messageContainer != null) {
+      params = params.append('messageContainer', messageContainer);
+    }
+    if (page != null && itemsPerPage != null) {
+      params = params.append('PageNumber', page);
+      params = params.append('pageSize', itemsPerPage);
+    }
+    return this.http.get<Message[]>(this.baseUrl + 'users/' + userId + '/messages', { observe: 'response', params })
+      .pipe(
+        map((response) => {
+          paginatedResult.result = response.body;
+          if (response.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
+          }
+          return paginatedResult;
+        })
+      );
+  }
+
+  // http://localhost:5000/api/users/1/messages/thread/7
+  getMessageThread(senderId: number, recipientId: number) {
+    return this.http.get<Message[]>(this.baseUrl + 'users/' + senderId + '/messages/thread/' + recipientId);
+  }
+
+  // http://localhost:5000/api/users/userId/controller]
+    // CreateMessage(int userId,
+    // MessageForCreationDto messageForCreationDto)
+
+  sendMessage(senderId: number, message: Message) {
+    return this.http
+      .post<Message>(this.baseUrl + 'users/' + senderId + '/messages',
+        message);
+  }
+
+  deleteMessage(messageId: number, userId: number) {
+    return this.http
+      .post<Message>(this.baseUrl + 'users/' + userId + '/messages/' + messageId, {});
+  }
+
+  markMessageAsRead(messageId: number, userId: number) {
+    return this.http
+      .post<Message>(this.baseUrl + 'users/' + userId + '/messages/' + messageId + '/read', {})
+      .subscribe();
+  }
 }

@@ -28,7 +28,7 @@ export class ListsComponent implements OnInit {
 
   pageChanged(e) {
     this.pagination.currentPage = e.page;
-    this.loadUser();
+    this.loadUsers();
   }
 
   loadUsers() {

@@ -2,7 +2,7 @@
   <div class="text-center mt-3">
     <h2>Your matches - {{pagination.totalItems}} found</h2>
   </div>
-  <form #form="ngForm" class="form-inline" (ngSubmit)='loadUser()' novalidate>
+  <form #form="ngForm" class="form-inline" (ngSubmit)='loadUsers()' novalidate>
     <div class="form-group">
       <label for="minAge">Age From</label>
       <input type="number" class="form-control ml-1" [(ngModel)]="userParams.minAge" style="width: 70px" id="minAge"
@@ -22,7 +22,7 @@
         </option>
       </select>
     </div>
-    <button type="submit" class="btn btn-primary" style="margin-left:10px" (click)='loadUser()'>Apply Filters</button>
+    <button type="submit" class="btn btn-primary" style="margin-left:10px" (click)='loadUsers()'>Apply Filters</button>
     <button type="button" class="btn btn-info" style="margin-left:10px" (click)='resetFilters()'>Reset Filter</button>
 
     <div class="col">
@@ -30,10 +30,10 @@
       <div class="btn-group float-right">
         <label class="mr-2">Order By: </label>
         <button type="button" name="orderBy" class="btn btn-primary" btnRadio="lastActive" [(ngModel)]="userParams.orderBy"
-          (click)='loadUser()'>
+          (click)='loadUsers()'>
           Last Active</button>
         <button type="button" name="orderBy" class="btn btn-primary" btnRadio="created" [(ngModel)]="userParams.orderBy"
-          (click)='loadUser()'>
+          (click)='loadUsers()'>
           Newest Members</button>
       </div>
     </div>

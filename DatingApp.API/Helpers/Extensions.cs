@@ -31,10 +31,10 @@ namespace DatingApp.API.Helpers
             var paginationHeader = new PaginationHeader(currentPage, itemsPerPage, totalItems, totalPages);
             
             /*            
-                    NOTE : JsonSerializerSettings &  CamelCasePropertyNamesContractResolver  
+            NOTE : JsonSerializerSettings &  CamelCasePropertyNamesContractResolver  
             angular deal with camelcase format otherwise we get in the header:
             Pagination →{"CurrentPage":1,"ItemsPerPage":3,"TotalItems":3,"TotalPages":4}
-            we will get : Pagination →{"currentPage":1,"itemsPerPage":3,"totalItems":3,"totalPages":4
+             and we need : Pagination →{"currentPage":1,"itemsPerPage":3,"totalItems":3,"totalPages":4
             */
             var camelCaseFormatter = new JsonSerializerSettings();
             camelCaseFormatter.ContractResolver = new CamelCasePropertyNamesContractResolver();

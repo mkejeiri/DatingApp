@@ -97,5 +97,48 @@ namespace DatingApp.API.Data
             return await _context.Likes
                         .FirstOrDefaultAsync(l => l.LikerId == userId && l.LikeeId == recipientId);
         }
+
+        public async Task<Message> GetMessage(int id)
+        {
+            return await _context.Messages.FirstOrDefaultAsync(m => m.Id == id);
+        }
+
+        public async Task<PagedList<Message>> GetMessagesForUser(MessageParams messageParams)
+        {
+            var messages = _context.Messages
+            .Include(m => m.Sender).ThenInclude(s => s.Photos) 
+            .Include(m => m.Recipient).ThenInclude(r => r.Photos)
+            .AsQueryable();
+            switch (messageParams.MessageContainer.ToLower())
+            {
+                case "inbox": messages = messages
+                              .Where(m => m.RecipientId == messageParams.UserId && !m.RecipientDeleted);
+                break; 
+                case "outbox":  messages = messages
+                                .Where(m => m.SenderId == messageParams.UserId  && !m.SenderDeleted);
+                break; 
+                
+                default:
+                     messages = messages
+                     .Where(m => m.RecipientId == messageParams.UserId && !m.IsRead && !m.RecipientDeleted);
+                break;
+            }
+
+             messages = messages.OrderByDescending(m => m.MessageSent);
+            //   Task<PagedList<T>> CreateAsync(IQueryable<T> source, int pageNumber, int pageSize)
+             return await PagedList<Message>
+             .CreateAsync(messages,messageParams.PageNumber, messageParams.PageSize ); 
+        }
+
+        public async Task<IEnumerable<Message>> GetMessagesThread(int userId, int recipientId)
+        {
+            var messages = await _context.Messages
+            .Include(m => m.Sender).ThenInclude(s => s.Photos) 
+            .Include(m => m.Recipient).ThenInclude(r => r.Photos)
+            .Where(m => m.SenderId == userId && m.RecipientId == recipientId && !m.SenderDeleted ||
+                        m.SenderId == recipientId && m.RecipientId == userId && !m.RecipientDeleted
+            ).ToListAsync();
+            return messages;
+        }
     }
 }

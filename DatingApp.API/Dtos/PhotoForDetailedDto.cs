@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-
+//Data transfer object (DTO)
 namespace DatingApp.API.Dtos
 {
     public class PhotoForDetailedDto

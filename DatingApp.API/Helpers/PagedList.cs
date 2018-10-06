@@ -13,19 +13,19 @@ namespace DatingApp.API.Helpers
         public int PageSize { get; set; }
         public int TotalCount { get; set; }
 
-        public PagedList(List<T> items, int count, int pageNumber, int pageSize)
+        public PagedList(List<T> items, int totalCount, int pageNumber, int pageSize)
         {
-            TotalCount = count;
+            TotalCount = totalCount;
             PageSize = pageSize;
             CurrentPage = pageNumber;
-            TotalPages = (int)Math.Ceiling(count / (double)(pageSize));
+            TotalPages = (int)Math.Ceiling(totalCount / (double)(pageSize));
             this.AddRange(items);
         }
 
         /* N O T E :
             IQueryable<T>: it differ execution of our request to get a set of T (e.g users)  
             and it allows us to define  part of our query againt the DB in multiple steps and 
-            with diffrered execution, e.g in this particular case we will skip a number of items and take
+            with differed execution, e.g in this particular case we will skip a number of items and take
             another numbers of items that matches the page number and page size, which ultimetly allow us to page 
             our request!!!*/
         public static async Task<PagedList<T>> CreateAsync(IQueryable<T> source, int pageNumber, int pageSize)

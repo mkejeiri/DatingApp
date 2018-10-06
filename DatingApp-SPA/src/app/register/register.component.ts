@@ -71,8 +71,6 @@ export class RegisterComponent implements OnInit {
         (err) => {
           this.alertify.error(err);
         }, () => {
-          console.log('login');
-          console.log(this.user);
           this.authService.login(this.user).subscribe(() => {
             this.router.navigate(['/members']);
           });

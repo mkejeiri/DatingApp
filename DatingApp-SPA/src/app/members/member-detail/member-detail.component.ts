@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { User } from '../../_models/User';
 import { UserService } from '../../_service/user.service';
 import { AlertifyService } from '../../_service/alertify.service';
 import { ActivatedRoute } from '@angular/router';
 import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery';
+import { TabsetComponent } from 'ngx-bootstrap';
+import { AuthService } from '../../_service/auth.service';
 
 @Component({
   selector: 'app-member-detail',
@@ -14,13 +16,18 @@ export class MemberDetailComponent implements OnInit {
   user: User;
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
+  @ViewChild('memberDetailsTab') userDetailsTab: TabsetComponent;
   constructor(private userService: UserService,
     private alertify: AlertifyService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    private authService: AuthService) { }
 
   ngOnInit() {
+    this.route.queryParams.subscribe((data) => {
+      this.selectTab(((data['tab'] != null) ? +data['tab'] : 0));
+    });
 
-    // this.loadUser();
+    // this.loadUsers();
     this.route.data.subscribe(
       (data) => {
         this.user = data['user'];
@@ -52,8 +59,23 @@ export class MemberDetailComponent implements OnInit {
     }
     return imagesUrl;
   }
+
+  selectTab(tab: number) {
+    this.userDetailsTab.tabs[tab].active = true;
+  }
+
+  sendLike() {
+    this.userService.sendLike(this.authService.decodedToken.nameid , this.user.id).subscribe(
+      (data) => {
+        this.alertify.success('You have liked ' + this.user.knownAs);
+      },
+      error => {
+        this.alertify.error(error);
+      });
+  }
+
   // members/4
-  // loadUser() {
+  // loadUsers() {
   //   this.userService.getUser(+this.route.snapshot.params['id']).subscribe(
   //     (user: User) => {
   //       this.user = user;

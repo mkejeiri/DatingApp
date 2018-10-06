@@ -24,7 +24,7 @@ export class MemberListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // this.loadUser();
+    // this.loadUsers();
     this.route.data.subscribe(
       (data) => {
         this.users = data['users'].result;
@@ -35,15 +35,15 @@ export class MemberListComponent implements OnInit {
   }
   resetFilters() {
     this.userParams.gender = this.user.gender === 'female' ? 'male' : 'female';
-    this.loadUser();
+    this.loadUsers();
     }
 
 
   pageChanged(e) {
     this.pagination.currentPage = e.page;
-    this.loadUser();
+    this.loadUsers();
   }
-  loadUser() {
+  loadUsers() {
     this.userService.getUsers(this.pagination.currentPage, this.pagination.itemsPerPage, this.userParams).subscribe(
       (paginatedResult: PaginationResult<User[]>) => {
         this.users = paginatedResult.result;

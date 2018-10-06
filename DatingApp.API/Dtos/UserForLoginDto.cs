@@ -1,3 +1,4 @@
+//Data transfer object (DTO)
 namespace DatingApp.API.Dtos
 {
     public class UserForLoginDto
