@@ -251,7 +251,7 @@ Publishing the DatingApp :
 
 - 5 : since we serving SPA from the same domaine we don't need to configure whitelistedDomains for JwtModule
 
-- 6: Solving the warning : when using includes and not returning the type that we suppose to retunr EF give this warning 
+- 6: Solving EF the warning : when using 'includes' in DbContext and not returning the type that we suppose to return EF give this warning 
     Here : we cause we do a count on the IQueryable before returning a PagedList<User> (see CreateAsync in PagedList class) 
     The Include operation for navigation '[m].Recipient.Photos' is unnecessary and was ignored 
     because the navigation is not reachable in the final query results. 
