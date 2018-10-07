@@ -241,7 +241,7 @@ Publishing the DatingApp :
 
 
 
-   b- those change imply that we need to restart kestral server (dotnet watch run doesn't work!). 
+   b- those change imply that we need to restart kestrel server (dotnet watch run doesn't work!). 
 
 - 4 : we need to set 'environment.prod.ts' file
             export const environment = {
