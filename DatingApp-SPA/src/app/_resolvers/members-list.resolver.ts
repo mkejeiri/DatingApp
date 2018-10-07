@@ -11,7 +11,7 @@ import { AlertifyService } from '../_service/alertify.service';
 @Injectable()
 export class MembersListResolver implements Resolve<User[]>  {
     pageNumber = 1;
-    pageSize = 10;
+    pageSize = 50;
 
     constructor(private userService: UserService,
         private router: Router, private alertify: AlertifyService) { }

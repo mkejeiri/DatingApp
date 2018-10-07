@@ -145,3 +145,97 @@ Adding likes and see likees
 1 - add like functionality
 2 - Using ngx bootstrap buttons and paginations
 3 - Using the new LikeParamsResolver which gets of likeParams value before even the ListsComponent loaded
+
+-----------------------------------------------------------------------------
+Publishing the DatingApp :
+-----------------------------------------------------------------------------
+0- Seed only if there is no user in the DB
+1- config the distribution to point to API 'wwwroot' folder and use ng build, see 
+   the available options for optimization. Obviously ng build will create a big file (~4MB),
+   we need to optimize this. 
+   a- ng build --prod (= ng build --prod --build-optimizer=true) will allow ahead of time (aot vs JIT in dev mode) compilation, and since
+       the aot compilation is already done, the vendor.js (sizeable file which includes angular compiler)
+       will be needed no more!.  
+       minification + uglyfication (dead code algorithm -> unused/dead code removal) will implicitly take place       
+
+        I M P O R T A N T => - ng build includes : Bundling, minification, tree shaking (dead-code elimination),
+                             output hashing, AoT compilation. more info...: https://webpack.js.org/guides/       
+                             - JIT=ng serve (vs AoT) use in Dev mode will load the following output files in memory: 
+                                --------(DO NOT EXIST physically = just in memory)--------- 
+                                Date: 2018-10-07T10:08:03.160Z
+                                Hash: 50a7bde4436787d551d1
+                                Time: 8950ms
+                                chunk {main} main.js, main.js.map (main) 162 kB [initial] [rendered]
+                                chunk {polyfills} polyfills.js, polyfills.js.map (polyfills) 227 kB [initial] [rendered]
+                                chunk {runtime} runtime.js, runtime.js.map (runtime) 6.22 kB [entry] [rendered]
+                                chunk {scripts} scripts.js, scripts.js.map (scripts) 140 kB  [rendered]
+                                chunk {styles} styles.js, styles.js.map (styles) 353 kB [initial] [rendered]
+                                chunk {vendor} vendor.js, vendor.js.map (vendor) 4.89 MB [initial] 
+
+                            - AoT benefits : 
+                                    - faster rendering: no need to wait for compilation
+                                    - Few async requests: AoT compiler also inlines HTML templates and CSS files 
+                                                          and help reduce the amount of asynchronous requests sent by the application,
+                                                          so less async request, html/css templates are inline JS bundled directly into the app.
+                                    - smaller framework download size : no need to download the compiler (vendor.js) - app already compiled 
+                                    - detect template errors earlier
+                                    - better security: fewer opportunity injection attach, no css or html template to read.
+
+
+   b- ng build --prod will optimize the source code in such a way that it will affect alertify functionality,
+      that why we need to use  ng build --prod --build-optimizer=false
+   c- with ng build the name of the file is hashed (output hashing) which means it time a file content change the client 
+      is forced to get the lastest Version!!!    
+2-Order matters for serving SPA (static files) in startup.cs file
+    a-  app.UseDefaultFiles(); //look for html index (or asp, php, ....)
+    b-  app.UseStaticFiles();  //serve static file from wwwroot folder. 
+
+3- How to deal with the issue of refreshing SPA routed pages and prevent API to override the 
+   the SPA routing, basically we need to tell the API what should do with the unknow route!!!
+   a- we give  app.UseMvc() some route configuration and create a dedicated controller (Fallback) 
+   to deal with this:
+                app.UseMvc(routes => {
+                            routes.MapSpaFallbackRoute(
+                                    name: "spa-fallback",
+                                    defaults: new {
+                                        controller = "Fallback", //Controller name to use
+                                        action ="Index" //action method to call in the Fallback controller
+                                    }
+                                );
+                            });
+                
+                public class Fallback : Controller 
+                {
+                    IActionResult Index(){
+                        //return a physical full path filename : index.html
+                        return PhysicalFile(Path.Combine(Directory.GetCurrentDirectory(), 
+                        "wwwroot","index.html"),"text/HTML");
+                    }
+                }
+
+
+
+   b- those change imply that we need to restart kestral server (dotnet watch run doesn't work!). 
+
+- 4 : we need to set 'environment.prod.ts' file
+            export const environment = {
+            production: true,
+            apiUrl: 'api/'
+            };
+
+- 5 : since we serving SPA from the same domaine we don't need to configure whitelistedDomains for JwtModule
+
+- 6: Solving the warning : when using includes and not returning the type that we suppose to retunr EF give this warning 
+    Here : we cause we do a count on the IQueryable before returning a PagedList<User> (see CreateAsync in PagedList class) 
+    The Include operation for navigation '[m].Recipient.Photos' is unnecessary and was ignored 
+    because the navigation is not reachable in the final query results. 
+    See https://docs.microsoft.com/en-us/ef/core/querying/related-data
+
+    services.AddDbContext<DataContext>(x => x.UseMySql(Configuration.GetConnectionString("DefaultConnection"))
+    .ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.IncludeIgnoredWarning))); 
+
+7- dotnet ef migrations script -o datingApp-mysql.sql
+8- mysql operations:    
+    - create DDL for DB: dotnet ef migrations script -o datingApp-mysql.sql 
+    - create DB: mysql> Create database datingApp   
+    - run the script: mysql> source ./datingApp-mysql.sql

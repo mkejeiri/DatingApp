@@ -11,7 +11,7 @@ import { AlertifyService } from '../_service/alertify.service';
 @Injectable()
 export class LikeParamsResolver implements Resolve<User[]>  {
     pageNumber = 1;
-    pageSize = 10;
+    pageSize = 50;
     likeParams = 'likers';
 
     constructor(private userService: UserService,

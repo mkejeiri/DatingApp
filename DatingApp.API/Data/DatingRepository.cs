@@ -120,7 +120,8 @@ namespace DatingApp.API.Data
                 
                 default:
                      messages = messages
-                     .Where(m => m.RecipientId == messageParams.UserId && !m.IsRead && !m.RecipientDeleted);
+                     .Where(m => m.RecipientId == messageParams.UserId 
+                            && m.IsRead == false && m.RecipientDeleted == false);
                 break;
             }
 
